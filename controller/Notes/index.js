@@ -44,4 +44,21 @@ const updateNote = async(req, res) => {
     }
 }
 
-module.exports = { createNote, updateNote }
+const delteNote = async (req, res) => {
+    const id = req.params.id;
+    const noteID = await Notes.findById({_id : id});
+
+    if (noteID) {
+        const deleteNote = await User.findByIdAndRemove(id);
+        if (deleteNote) {
+            return res.status(200).json({ message: "Note Deleted Successfully...!" });
+        } else {
+            return res.status(400).json({ message: "Something went wrong...!" });
+        }
+    }
+    else {
+        return res.status(404).json({ message: "Note Not Found...!" });
+    }
+}
+
+module.exports = { createNote, updateNote, delteNote }
