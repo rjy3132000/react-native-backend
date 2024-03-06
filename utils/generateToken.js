@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 const generateToken = (id) => {
-    return jwt.sign({id}, "scheduler", {
-            expiresIn: "30d",
-    })}
+    return jwt.sign({id}, "react_native_crud", { expiresIn: "30d", })}
 
 module.exports = generateToken;

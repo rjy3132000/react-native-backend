@@ -1,28 +1,25 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user/userModel");
 
-const protect = async (req, res) => {
-    let token;
-    if (
-        req.headers.authorization &&
-        req.headers.authorization.startsWith("Bearer")
-    ) {
-        try {
+const protect = async(req, res, next) => {
+    const token = req.header("token");
+    
 
-            token = req.headers.authorization.split(" ")[1];
-            // decodes token Id
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.user = await User.findById(decoded.id).select("-password");
-
-            next()
-
-        } catch (error) {
-            res.status(401);
-            throw new Error("Not authrozied, token Failed");
-        }
+    if(!token) {
+        return res.status(401).json({
+            message : "No token, authorization denied."
+        });
     }
-    if (!token) {
-        res.status(401);
-        throw new Error("Not authrozied, token Failed");
+    try {
+        const JWT_SECRET = "react_native_crud";
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded
+        next();
+
+    } catch (error) {
+        return res.status(401).json({
+            message: "Invalid token, authorization denied.",
+        });
     }
 }
+
+module.exports = { protect }
