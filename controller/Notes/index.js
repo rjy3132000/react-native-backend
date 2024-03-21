@@ -49,7 +49,7 @@ const delteNote = async (req, res) => {
     const noteID = await Notes.findById({_id : id});
 
     if (noteID) {
-        const deleteNote = await User.findByIdAndRemove(id);
+        const deleteNote = await Notes.findByIdAndDelete({_id:id})
         if (deleteNote) {
             return res.status(200).json({ message: "Note Deleted Successfully...!" });
         } else {
